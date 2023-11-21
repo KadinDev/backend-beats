@@ -1,0 +1,78 @@
+DEPLOY HEROKU
+
+
+    Passo 1: Crie uma Conta no Heroku
+Se você ainda não tem uma conta no Heroku, crie uma em https://signup.heroku.com/.
+
+    Passo 2: Instale o Heroku CLI
+Baixe e instale o Heroku CLI a partir de https://devcenter.heroku.com/articles/heroku-cli.
+
+    Passo 3: Inicialize um Repositório Git
+Certifique-se de que seu projeto Node.js tem um repositório Git inicializado. Se não tiver, execute os seguintes comandos:
+
+git init
+git add .
+git commit -m "Primeiro commit"
+
+    Passo 4: Crie um Arquivo Procfile
+Crie um arquivo chamado Procfile (sem extensão) na raiz do seu projeto. Este arquivo informará ao Heroku como iniciar o seu aplicativo. Adicione o seguinte conteúdo ao Procfile:
+
+Procfile
+    web: node server.js
+Isso assume que o ponto de entrada do seu aplicativo é um arquivo chamado server.js. Se o seu arquivo for nomeado de maneira diferente, ajuste o caminho no Procfile conforme necessário.
+
+    Passo 5: Instale o Módulo express como uma Dependência de Produção
+No seu projeto, execute o seguinte comando para instalar o express como uma dependência de produção:
+
+    npm install express --save
+
+    Passo 6: Atualize o Código do Servidor para Ouvir em Todas as Interfaces
+Atualize o trecho onde você inicia o servidor no arquivo server.js para ouvir em todas as interfaces. 
+
+Substitua o trecho atual:
+// Inicie o servidor
+app.listen(port, () => {
+  console.log(`Servidor rodando em http://localhost:${port}`);
+});
+
+POR:
+javascript
+Copy code
+// Inicie o servidor
+app.listen(process.env.PORT || port, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${process.env.PORT || port}`);
+});
+
+
+    Passo 7: Configure o Heroku
+Abra o terminal e faça login no Heroku usando o comando:
+
+heroku login
+Navegue até o diretório do seu projeto no terminal.
+
+Execute o seguinte comando para criar um aplicativo no Heroku:
+
+heroku create nomedoapp
+Substitua "nomedoapp" pelo nome desejado para o seu aplicativo no Heroku.
+
+Adicione um repositório remoto do Heroku ao seu projeto Git:
+
+git remote add heroku https://git.heroku.com/nomedoapp.git
+Substitua "nomedoapp" pelo nome que você escolheu no passo 3.
+
+
+    Passo 8: Faça o Deploy do Seu Aplicativo
+Execute os seguintes comandos para fazer o deploy do seu aplicativo no Heroku:
+
+git add .
+git commit -m "Preparando para o deploy no Heroku"
+git push heroku master
+
+
+    Passo 9: Abra Seu Aplicativo no Navegador
+Após o deploy, você pode abrir seu aplicativo no navegador usando o seguinte comando:
+
+heroku open
+Isso abrirá a URL do seu aplicativo no navegador padrão.
+
+Se tudo foi configurado corretamente, seu aplicativo Node.js deve estar agora rodando no Heroku. Lembre-se de que, ao implantar em um ambiente de produção, você deve configurar um banco de dados, se necessário, e considerar outras configurações de produção específicas para garantir um ambiente estável e seguro.

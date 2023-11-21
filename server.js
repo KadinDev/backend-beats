@@ -110,6 +110,13 @@ app.get('/', (req, res) => {
 });
 
 // Inicie o servidor
+/*
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
+});
+*/
+
+// Inicie o servidor
+app.listen(process.env.PORT || port, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${process.env.PORT || port}`);
 });
