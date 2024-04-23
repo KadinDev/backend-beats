@@ -76,3 +76,8 @@ heroku open
 Isso abrirá a URL do seu aplicativo no navegador padrão.
 
 Se tudo foi configurado corretamente, seu aplicativo Node.js deve estar agora rodando no Heroku. Lembre-se de que, ao implantar em um ambiente de produção, você deve configurar um banco de dados, se necessário, e considerar outras configurações de produção específicas para garantir um ambiente estável e seguro.
+
+
+
+site
+https://backend-beats-2gxj2nrft-kadindev.vercel.app/
