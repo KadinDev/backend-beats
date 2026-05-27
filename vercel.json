@@ -1,15 +1,92 @@
 {
-    "version": 2,
-    "builds": [
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/audio/(.*)",
+      "headers": [
         {
-            "src": "src/server.js",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
         {
-            "src": "(.*)",
-            "dest": "src/server.js"
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Accept-Ranges",
+          "value": "bytes"
         }
-    ]
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/audio/1", "destination": "/audio/audio1.mp3" },
+    { "source": "/audio/2", "destination": "/audio/audio2.mp3" },
+    { "source": "/audio/3", "destination": "/audio/audio3.mp3" },
+    { "source": "/audio/4", "destination": "/audio/audio4.mp3" },
+    { "source": "/audio/5", "destination": "/audio/audio5.mp3" },
+    { "source": "/audio/6", "destination": "/audio/audio6.mp3" },
+    { "source": "/audio/7", "destination": "/audio/audio7.mp3" },
+    { "source": "/audio/8", "destination": "/audio/audio8.mp3" },
+    { "source": "/audio/9", "destination": "/audio/audio9.mp3" },
+    { "source": "/audio/10", "destination": "/audio/audio10.mp3" },
+    { "source": "/audio/11", "destination": "/audio/audio11.mp3" },
+    { "source": "/audio/12", "destination": "/audio/audio12.mp3" },
+    { "source": "/audio/13", "destination": "/audio/audio13.mp3" },
+    { "source": "/audio/14", "destination": "/audio/audio14.mp3" },
+    { "source": "/audio/15", "destination": "/audio/audio15.mp3" },
+    { "source": "/audio/16", "destination": "/audio/audio16.mp3" },
+    { "source": "/audio/17", "destination": "/audio/audio17.mp3" },
+    { "source": "/audio/18", "destination": "/audio/audio18.mp3" },
+    { "source": "/audio/19", "destination": "/audio/audio19.mp3" },
+    { "source": "/audio/20", "destination": "/audio/audio20.mp3" },
+    { "source": "/audio/21", "destination": "/audio/audio21.mp3" },
+    { "source": "/audio/22", "destination": "/audio/audio22.mp3" },
+    { "source": "/audio/23", "destination": "/audio/audio23.mp3" },
+    { "source": "/audio/24", "destination": "/audio/audio24.mp3" },
+    { "source": "/audio/25", "destination": "/audio/audio25.mp3" },
+    { "source": "/audio/26", "destination": "/audio/audio26.mp3" },
+    { "source": "/audio/27", "destination": "/audio/audio27.mp3" },
+    { "source": "/audio/28", "destination": "/audio/audio28.mp3" },
+    { "source": "/audio/29", "destination": "/audio/audio29.mp3" },
+    { "source": "/audio/30", "destination": "/audio/audio30.mp3" },
+    { "source": "/audio/31", "destination": "/audio/audio31.mp3" },
+    { "source": "/audio/32", "destination": "/audio/audio32.mp3" },
+    { "source": "/audio/33", "destination": "/audio/audio33.mp3" },
+    { "source": "/audio/34", "destination": "/audio/audio34.mp3" },
+    { "source": "/audio/35", "destination": "/audio/audio35.mp3" },
+    { "source": "/audio/36", "destination": "/audio/audio36.mp3" },
+    { "source": "/audio/37", "destination": "/audio/audio37.mp3" },
+    { "source": "/audio/38", "destination": "/audio/audio38.mp3" },
+    { "source": "/audio/39", "destination": "/audio/audio39.mp3" },
+    { "source": "/audio/40", "destination": "/audio/audio40.mp3" },
+    { "source": "/audio/41", "destination": "/audio/audio41.mp3" },
+    { "source": "/audio/42", "destination": "/audio/audio42.mp3" },
+    { "source": "/audio/43", "destination": "/audio/audio43.mp3" },
+    { "source": "/audio/44", "destination": "/audio/audio44.mp3" },
+    { "source": "/audio/45", "destination": "/audio/audio45.mp3" },
+    { "source": "/audio/46", "destination": "/audio/audio46.mp3" },
+    { "source": "/audio/47", "destination": "/audio/audio47.mp3" },
+    { "source": "/audio/48", "destination": "/audio/audio48.mp3" },
+    { "source": "/audio/49", "destination": "/audio/audio49.mp3" },
+    { "source": "/audio/50", "destination": "/audio/audio50.mp3" },
+    { "source": "/audio/51", "destination": "/audio/audio51.mp3" },
+    { "source": "/audio/52", "destination": "/audio/audio52.mp3" },
+    { "source": "/audio/53", "destination": "/audio/audio53.mp3" },
+    { "source": "/audio/54", "destination": "/audio/audio54.mp3" },
+    { "source": "/audio/55", "destination": "/audio/audio55.mp3" },
+    { "source": "/audio/56", "destination": "/audio/audio56.mp3" },
+    { "source": "/audio/57", "destination": "/audio/audio57.mp3" },
+    { "source": "/audio/58", "destination": "/audio/audio58.mp3" },
+    { "source": "/audio/59", "destination": "/audio/audio59.mp3" }
+  ]
 }
