@@ -1,6 +1,7 @@
 const { del } = require('@vercel/blob');
 const { requireAdmin } = require('./_auth');
 const { readJson } = require('./_body');
+const { removeTrack, UPLOADS_PREFIX } = require('./_tracks-store');
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'DELETE') {
@@ -14,23 +15,19 @@ module.exports = async function handler(request, response) {
   }
 
   try {
-    const { url, pathname, source } = await readJson(request);
-
-    if (source === 'static') {
-      response.status(409).json({
-        error: 'Musicas fixas do deploy nao podem ser apagadas pelo painel. Remova o arquivo do Git e faca um novo deploy.'
-      });
-      return;
-    }
-
+    const { url, pathname } = await readJson(request);
     const target = url || pathname;
 
-    if (!target || !String(target).includes('uploads/')) {
-      response.status(400).json({ error: 'Musica enviada invalida.' });
+    if (!target || !String(pathname || target).includes(UPLOADS_PREFIX)) {
+      response.status(400).json({ error: 'Musica invalida.' });
       return;
     }
 
     await del(target);
+
+    if (pathname) {
+      await removeTrack(pathname);
+    }
 
     response.status(200).json({
       ok: true

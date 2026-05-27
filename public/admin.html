@@ -27,13 +27,16 @@
       </section>
 
       <section id="uploadPanel" class="panel" hidden>
+        <label for="trackTitle">Nome da musica</label>
+        <input id="trackTitle" type="text" maxlength="120" placeholder="Ex: Beat batalha 01">
+
         <label for="audioFile">Enviar nova musica</label>
         <div class="row">
           <input id="audioFile" type="file" accept="audio/*">
           <button id="uploadButton" type="button">Enviar</button>
         </div>
         <progress id="uploadProgress" max="100" value="0"></progress>
-        <p id="uploadStatus" class="muted">Arquivos enviados vao para Vercel Blob com cache longo.</p>
+        <p id="uploadStatus" class="muted">Arquivos enviados vao direto para Vercel Blob com cache longo.</p>
       </section>
 
       <section id="listPanel" class="panel" hidden>

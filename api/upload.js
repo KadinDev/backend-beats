@@ -1,8 +1,17 @@
 const { handleUpload } = require('@vercel/blob/client');
 const { isAuthorized } = require('./_auth');
 const { readJson } = require('./_body');
+const { upsertTrack, UPLOADS_PREFIX } = require('./_tracks-store');
 
 const MAX_AUDIO_SIZE = 25 * 1024 * 1024;
+
+function parsePayload(clientPayload) {
+  try {
+    return clientPayload ? JSON.parse(clientPayload) : {};
+  } catch {
+    return {};
+  }
+}
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'POST') {
@@ -17,9 +26,20 @@ module.exports = async function handler(request, response) {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async () => {
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
         if (!isAuthorized(request)) {
           throw new Error('Nao autorizado.');
+        }
+
+        const payload = parsePayload(clientPayload);
+        const title = String(payload.title || '').trim();
+
+        if (!title) {
+          throw new Error('Informe o nome da musica.');
+        }
+
+        if (!pathname.startsWith(UPLOADS_PREFIX)) {
+          throw new Error('Caminho de upload invalido.');
         }
 
         return {
@@ -33,8 +53,22 @@ module.exports = async function handler(request, response) {
           ],
           maximumSizeInBytes: MAX_AUDIO_SIZE,
           addRandomSuffix: true,
-          cacheControlMaxAge: 31536000
+          cacheControlMaxAge: 31536000,
+          tokenPayload: JSON.stringify({ title })
         };
+      },
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        const payload = parsePayload(tokenPayload);
+
+        await upsertTrack({
+          id: blob.pathname,
+          title: payload.title || blob.pathname,
+          url: blob.url,
+          downloadUrl: blob.downloadUrl,
+          pathname: blob.pathname,
+          size: blob.size,
+          uploadedAt: new Date().toISOString()
+        });
       }
     });
 

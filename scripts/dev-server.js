@@ -30,12 +30,6 @@ function getStaticFilePath(urlPath) {
     return path.join(publicDir, 'index.html');
   }
 
-  const audioMatch = urlPath.match(/^\/audio\/(\d+)$/);
-
-  if (audioMatch) {
-    return path.join(publicDir, 'audio', `audio${audioMatch[1]}.mp3`);
-  }
-
   const normalizedPath = path.normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, '');
   return path.join(publicDir, normalizedPath);
 }
@@ -66,22 +60,10 @@ function serveStatic(request, response) {
 }
 
 function handleTracks(response) {
-  const tracks = Array.from({ length: 59 }, (_, index) => {
-    const id = index + 1;
-
-    return {
-      id: String(id),
-      title: `Beat ${id}`,
-      url: `/audio/${id}`,
-      source: 'static',
-      deletable: false
-    };
-  });
-
   sendJson(response, 200, {
-    tracks,
+    tracks: [],
     blobEnabled: false,
-    warning: 'Servidor local lista apenas os beats fixos. Upload/delete real usa Vercel Blob no deploy.'
+    warning: 'Servidor local nao acessa o Vercel Blob. Use o deploy para listar, enviar e deletar musicas reais.'
   });
 }
 
@@ -126,5 +108,5 @@ const server = http.createServer((request, response) => {
 server.listen(port, () => {
   console.log(`Backend Beats local: http://localhost:${port}`);
   console.log(`Admin: http://localhost:${port}/admin.html`);
-  console.log(`Audio teste: http://localhost:${port}/audio/1`);
+  console.log(`API do app: http://localhost:${port}/api/tracks`);
 });

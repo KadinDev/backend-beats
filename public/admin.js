@@ -6,6 +6,7 @@ const logoutButton = document.querySelector('#logoutButton');
 const loginStatus = document.querySelector('#loginStatus');
 const uploadPanel = document.querySelector('#uploadPanel');
 const listPanel = document.querySelector('#listPanel');
+const trackTitleInput = document.querySelector('#trackTitle');
 const audioFileInput = document.querySelector('#audioFile');
 const uploadButton = document.querySelector('#uploadButton');
 const refreshButton = document.querySelector('#refreshButton');
@@ -81,10 +82,7 @@ async function loadTracks() {
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.textContent = 'Deletar';
-    deleteButton.disabled = false;
-    deleteButton.title = track.deletable
-      ? 'Remove a musica enviada do Vercel Blob'
-      : 'Musicas fixas precisam ser removidas do Git e redeployadas';
+    deleteButton.title = 'Remove a musica do Vercel Blob';
     deleteButton.addEventListener('click', () => deleteTrack(track));
     actions.append(deleteButton);
 
@@ -136,6 +134,12 @@ async function uploadTrack() {
   }
 
   const file = audioFileInput.files?.[0];
+  const title = trackTitleInput.value.trim();
+
+  if (!title) {
+    alert('Informe o nome da musica.');
+    return;
+  }
 
   if (!file) {
     alert('Escolha um arquivo de audio.');
@@ -155,6 +159,7 @@ async function uploadTrack() {
     await upload(`uploads/${Date.now()}-${safeFileName(file.name)}`, file, {
       access: 'public',
       handleUploadUrl: '/api/upload',
+      clientPayload: JSON.stringify({ title }),
       contentType: file.type || 'audio/mpeg',
       multipart: true,
       headers: {
@@ -167,6 +172,7 @@ async function uploadTrack() {
     });
 
     audioFileInput.value = '';
+    trackTitleInput.value = '';
     uploadStatus.textContent = 'Musica enviada.';
     await loadTracks();
   } catch (error) {

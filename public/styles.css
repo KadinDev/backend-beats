@@ -60,6 +60,10 @@ label {
   font-weight: 700;
 }
 
+label:not(:first-child) {
+  margin-top: 14px;
+}
+
 input {
   width: 100%;
   min-height: 42px;

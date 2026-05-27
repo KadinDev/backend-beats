@@ -1,18 +1,15 @@
 DEPLOY VERCEL
 
-Este projeto foi preparado para deploy estatico na Vercel, sem Express e sem Serverless Function.
-Isso economiza custo porque os MP3 sao entregues pela CDN da Vercel com cache longo.
+Este projeto foi preparado para Vercel com o minimo de infraestrutura:
+HTML/CSS/JS estatico no front, Serverless Functions pequenas para admin/API, e Vercel Blob para os MP3.
 
 Agora tambem existe um painel em /admin.html para enviar e deletar musicas novas.
 Uploads novos usam Vercel Blob via client upload, entao o arquivo vai direto do navegador para o Blob.
 Isso evita trafegar MP3 pela funcao Node.
 
-Endpoints usados pelo app:
+Endpoint usado pelo app:
 
-  /audio/1  -> /audio/audio1.mp3
-  /audio/2  -> /audio/audio2.mp3
-  ...
-  /audio/59 -> /audio/audio59.mp3
+  /api/tracks
 
 Painel:
 
@@ -41,12 +38,11 @@ Comandos:
 
 Configuracao importante:
 
-- Os audios ficam em public/audio.
-- O vercel.json aplica Cache-Control: public, max-age=31536000, immutable.
-- O app mobile tambem faz cache local no dispositivo, entao cada beat tende a baixar uma vez por usuario.
+- Todos os audios ficam no Vercel Blob, nao no Git.
+- O upload vai direto do navegador para o Blob; a funcao so gera permissao curta.
+- A API /api/tracks retorna titulo, url, pathname, tamanho e data.
+- O app mobile deve cachear os audios no dispositivo para cada usuario baixar cada beat o minimo possivel.
 - Nao use funcao Node para streaming de MP3 se a prioridade for economia.
-- Musicas fixas do deploy nao podem ser deletadas em runtime; remova do Git e faca um redeploy.
-- Musicas enviadas pelo painel podem ser deletadas pelo proprio painel.
 
 Atencao:
 

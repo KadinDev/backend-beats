@@ -1,16 +1,4 @@
-const { list } = require('@vercel/blob');
-
-const STATIC_TRACKS = Array.from({ length: 59 }, (_, index) => {
-  const id = index + 1;
-
-  return {
-    id: String(id),
-    title: `Beat ${id}`,
-    url: `/audio/${id}`,
-    source: 'static',
-    deletable: false
-  };
-});
+const { getTracks } = require('./_tracks-store');
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'GET') {
@@ -20,32 +8,18 @@ module.exports = async function handler(request, response) {
   }
 
   try {
-    const { blobs } = await list({
-      prefix: 'uploads/',
-      limit: 1000
-    });
+    const tracks = await getTracks();
 
-    const uploadedTracks = blobs.map((blob) => ({
-      id: blob.pathname,
-      title: blob.pathname.replace(/^uploads\//, ''),
-      url: blob.url,
-      downloadUrl: blob.downloadUrl,
-      pathname: blob.pathname,
-      size: blob.size,
-      uploadedAt: blob.uploadedAt,
-      source: 'blob',
-      deletable: true
-    }));
-
+    response.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
     response.status(200).json({
-      tracks: [...STATIC_TRACKS, ...uploadedTracks],
+      tracks,
+      count: tracks.length,
       blobEnabled: true
     });
   } catch (error) {
-    response.status(200).json({
-      tracks: STATIC_TRACKS,
-      blobEnabled: false,
-      warning: 'Vercel Blob ainda nao esta configurado neste ambiente.'
+    response.status(500).json({
+      error: 'Nao foi possivel listar as musicas.',
+      details: error.message
     });
   }
 };
