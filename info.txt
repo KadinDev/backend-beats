@@ -23,6 +23,16 @@ Variaveis de ambiente na Vercel:
   ADMIN_PASSWORD=uma-senha-forte
   BLOB_READ_WRITE_TOKEN=token-do-vercel-blob
 
+Cadastro manual do admin:
+
+  1. Abra o projeto na Vercel.
+  2. Va em Settings > Environment Variables.
+  3. Crie ADMIN_PASSWORD com uma senha forte.
+  4. Crie/conecte um Blob Store e garanta BLOB_READ_WRITE_TOKEN.
+  5. Faca um novo deploy.
+
+Com esse modelo existe um unico admin: quem souber a senha ADMIN_PASSWORD.
+
 Comandos:
 
   npm install

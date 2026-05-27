@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx vercel dev",
+    "dev": "node scripts/dev-server.js",
+    "vercel:dev": "npx vercel dev",
     "deploy": "npx vercel --prod"
   },
   "dependencies": {

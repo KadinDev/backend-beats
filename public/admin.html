@@ -20,11 +20,13 @@
         <label for="password">Senha admin</label>
         <div class="row">
           <input id="password" type="password" autocomplete="current-password" placeholder="ADMIN_PASSWORD">
-          <button id="savePassword" type="button">Salvar</button>
+          <button id="loginButton" type="button">Entrar</button>
+          <button id="logoutButton" type="button" hidden>Sair</button>
         </div>
+        <p id="loginStatus" class="muted">Entre como admin para gerenciar as musicas.</p>
       </section>
 
-      <section class="panel">
+      <section id="uploadPanel" class="panel" hidden>
         <label for="audioFile">Enviar nova musica</label>
         <div class="row">
           <input id="audioFile" type="file" accept="audio/*">
@@ -34,7 +36,7 @@
         <p id="uploadStatus" class="muted">Arquivos enviados vao para Vercel Blob com cache longo.</p>
       </section>
 
-      <section class="panel">
+      <section id="listPanel" class="panel" hidden>
         <div class="sectionTitle">
           <h2>Musicas</h2>
           <button id="refreshButton" type="button">Atualizar</button>

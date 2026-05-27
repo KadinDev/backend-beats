@@ -1,7 +1,11 @@
 import { upload } from 'https://esm.sh/@vercel/blob@2.4.0/client';
 
 const passwordInput = document.querySelector('#password');
-const savePasswordButton = document.querySelector('#savePassword');
+const loginButton = document.querySelector('#loginButton');
+const logoutButton = document.querySelector('#logoutButton');
+const loginStatus = document.querySelector('#loginStatus');
+const uploadPanel = document.querySelector('#uploadPanel');
+const listPanel = document.querySelector('#listPanel');
 const audioFileInput = document.querySelector('#audioFile');
 const uploadButton = document.querySelector('#uploadButton');
 const refreshButton = document.querySelector('#refreshButton');
@@ -11,6 +15,7 @@ const listStatus = document.querySelector('#listStatus');
 const trackList = document.querySelector('#trackList');
 
 passwordInput.value = localStorage.getItem('adminPassword') || '';
+let isAdmin = false;
 
 function getPassword() {
   return passwordInput.value.trim();
@@ -35,6 +40,10 @@ function safeFileName(name) {
 }
 
 async function loadTracks() {
+  if (!isAdmin) {
+    return;
+  }
+
   listStatus.textContent = 'Carregando musicas...';
   trackList.innerHTML = '';
 
@@ -72,7 +81,7 @@ async function loadTracks() {
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.textContent = 'Deletar';
-    deleteButton.disabled = !track.deletable;
+    deleteButton.disabled = false;
     deleteButton.title = track.deletable
       ? 'Remove a musica enviada do Vercel Blob'
       : 'Musicas fixas precisam ser removidas do Git e redeployadas';
@@ -85,6 +94,11 @@ async function loadTracks() {
 }
 
 async function deleteTrack(track) {
+  if (!isAdmin) {
+    alert('Entre como admin.');
+    return;
+  }
+
   if (!getPassword()) {
     alert('Informe a senha admin.');
     return;
@@ -116,6 +130,11 @@ async function deleteTrack(track) {
 }
 
 async function uploadTrack() {
+  if (!isAdmin) {
+    alert('Entre como admin.');
+    return;
+  }
+
   const file = audioFileInput.files?.[0];
 
   if (!file) {
@@ -157,12 +176,68 @@ async function uploadTrack() {
   }
 }
 
-savePasswordButton.addEventListener('click', () => {
+function setAdminState(nextState) {
+  isAdmin = nextState;
+  uploadPanel.hidden = !nextState;
+  listPanel.hidden = !nextState;
+  logoutButton.hidden = !nextState;
+  loginButton.hidden = nextState;
+  passwordInput.disabled = nextState;
+
+  if (!nextState) {
+    trackList.innerHTML = '';
+    listStatus.textContent = '';
+  }
+}
+
+async function login() {
+  if (!getPassword()) {
+    loginStatus.textContent = 'Informe a senha admin.';
+    return;
+  }
+
+  loginStatus.textContent = 'Validando...';
+
+  const response = await fetch('/api/admin-check', {
+    method: 'POST',
+    headers: {
+      'x-admin-password': getPassword()
+    }
+  });
+
+  if (!response.ok) {
+    localStorage.removeItem('adminPassword');
+    setAdminState(false);
+    loginStatus.textContent = 'Senha invalida.';
+    return;
+  }
+
   localStorage.setItem('adminPassword', getPassword());
-  uploadStatus.textContent = 'Senha salva neste navegador.';
+  setAdminState(true);
+  loginStatus.textContent = 'Admin logado.';
+  await loadTracks();
+}
+
+function logout() {
+  localStorage.removeItem('adminPassword');
+  passwordInput.value = '';
+  setAdminState(false);
+  loginStatus.textContent = 'Sessao encerrada.';
+}
+
+loginButton.addEventListener('click', login);
+logoutButton.addEventListener('click', logout);
+passwordInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    login();
+  }
 });
 
 uploadButton.addEventListener('click', uploadTrack);
 refreshButton.addEventListener('click', loadTracks);
 
-loadTracks();
+if (getPassword()) {
+  login();
+} else {
+  setAdminState(false);
+}
