@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Beats</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Mitos da Rima</p>
+          <h1>Gerenciar beats</h1>
+        </div>
+        <a class="link" href="/">Inicio</a>
+      </header>
+
+      <section class="panel">
+        <label for="password">Senha admin</label>
+        <div class="row">
+          <input id="password" type="password" autocomplete="current-password" placeholder="ADMIN_PASSWORD">
+          <button id="savePassword" type="button">Salvar</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label for="audioFile">Enviar nova musica</label>
+        <div class="row">
+          <input id="audioFile" type="file" accept="audio/*">
+          <button id="uploadButton" type="button">Enviar</button>
+        </div>
+        <progress id="uploadProgress" max="100" value="0"></progress>
+        <p id="uploadStatus" class="muted">Arquivos enviados vao para Vercel Blob com cache longo.</p>
+      </section>
+
+      <section class="panel">
+        <div class="sectionTitle">
+          <h2>Musicas</h2>
+          <button id="refreshButton" type="button">Atualizar</button>
+        </div>
+        <p id="listStatus" class="muted"></p>
+        <div id="trackList" class="trackList"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>

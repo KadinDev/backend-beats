@@ -5,5 +5,8 @@
   "scripts": {
     "dev": "npx vercel dev",
     "deploy": "npx vercel --prod"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.4.0"
   }
 }
