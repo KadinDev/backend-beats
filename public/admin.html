@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Beats</title>
+    <title>Admin Mitos da Rima</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
@@ -11,7 +11,7 @@
       <header class="topbar">
         <div>
           <p class="eyebrow">Mitos da Rima</p>
-          <h1>Gerenciar beats</h1>
+          <h1>Painel admin</h1>
         </div>
         <a class="link" href="/">Inicio</a>
       </header>
@@ -23,30 +23,121 @@
           <button id="loginButton" type="button">Entrar</button>
           <button id="logoutButton" type="button" hidden>Sair</button>
         </div>
-        <p id="loginStatus" class="muted">Entre como admin para gerenciar as musicas.</p>
+        <p id="loginStatus" class="muted">Entre como admin para gerenciar musicas e artistas.</p>
       </section>
 
-      <section id="uploadPanel" class="panel" hidden>
-        <label for="trackTitle">Nome da musica</label>
-        <input id="trackTitle" type="text" maxlength="120" placeholder="Ex: Beat batalha 01">
+      <nav id="adminTabs" class="tabs" hidden>
+        <button class="tabButton active" type="button" data-tab="beats">Beats</button>
+        <button class="tabButton" type="button" data-tab="artists">Palco Mitos</button>
+      </nav>
 
-        <label for="audioFile">Enviar nova musica</label>
-        <div class="row">
-          <input id="audioFile" type="file" accept="audio/*">
-          <button id="uploadButton" type="button">Enviar</button>
-        </div>
-        <progress id="uploadProgress" max="100" value="0"></progress>
-        <p id="uploadStatus" class="muted">Arquivos enviados vao direto para Vercel Blob com cache longo.</p>
-      </section>
+      <div id="beatsTab" class="tabPanel">
+        <section id="uploadPanel" class="panel" hidden>
+          <label for="trackTitle">Nome da musica</label>
+          <input id="trackTitle" type="text" maxlength="120" placeholder="Ex: Beat batalha 01">
 
-      <section id="listPanel" class="panel" hidden>
-        <div class="sectionTitle">
-          <h2>Musicas</h2>
-          <button id="refreshButton" type="button">Atualizar</button>
-        </div>
-        <p id="listStatus" class="muted"></p>
-        <div id="trackList" class="trackList"></div>
-      </section>
+          <label for="audioFile">Enviar nova musica</label>
+          <div class="row">
+            <input id="audioFile" type="file" accept="audio/*">
+            <button id="uploadButton" type="button">Enviar</button>
+          </div>
+          <progress id="uploadProgress" max="100" value="0"></progress>
+          <p id="uploadStatus" class="muted">Arquivos enviados vao direto para Vercel Blob com cache longo.</p>
+        </section>
+
+        <section id="listPanel" class="panel" hidden>
+          <div class="sectionTitle">
+            <h2>Musicas</h2>
+            <button id="refreshButton" type="button">Atualizar</button>
+          </div>
+          <p id="listStatus" class="muted"></p>
+          <div id="trackList" class="trackList"></div>
+        </section>
+      </div>
+
+      <div id="artistsTab" class="tabPanel" hidden>
+        <section id="artistFormPanel" class="panel" hidden>
+          <div class="sectionTitle">
+            <h2 id="artistFormTitle">Cadastrar anunciante</h2>
+            <button id="clearArtistButton" type="button">Novo</button>
+          </div>
+
+          <input id="artistId" type="hidden">
+
+          <div class="formGrid">
+            <div>
+              <label for="artistName">Nome do artista</label>
+              <input id="artistName" type="text" maxlength="120" placeholder="Ex: MC Coruja">
+            </div>
+
+            <div>
+              <label for="projectName">Nome do som/projeto</label>
+              <input id="projectName" type="text" maxlength="120" placeholder="Ex: Nova Era">
+            </div>
+
+            <div>
+              <label for="artistCategory">Categoria</label>
+              <select id="artistCategory">
+                <option value="featured">Destaques - R$ 100</option>
+                <option value="releases">Lançamentos - R$ 50</option>
+                <option value="recent">Recentes - R$ 30</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="paidValue">Valor pago</label>
+              <input id="paidValue" type="number" min="0" step="1" placeholder="100">
+            </div>
+          </div>
+
+          <label for="artistDescription">Descrição curta</label>
+          <input id="artistDescription" type="text" maxlength="180" placeholder="Ex: Uma nova fase, um novo som.">
+
+          <label for="imageUrl">URL da imagem/capa</label>
+          <input id="imageUrl" type="url" placeholder="https://...">
+
+          <div class="formGrid">
+            <div>
+              <label for="spotifyUrl">Link Spotify</label>
+              <input id="spotifyUrl" type="url" placeholder="https://open.spotify.com/...">
+            </div>
+
+            <div>
+              <label for="youtubeUrl">Link YouTube</label>
+              <input id="youtubeUrl" type="url" placeholder="https://youtube.com/...">
+            </div>
+
+            <div>
+              <label for="playsLabel">Plays exibidos</label>
+              <input id="playsLabel" type="text" maxlength="20" placeholder="Ex: 12.4K">
+            </div>
+
+            <div>
+              <label for="fireLabel">Destaque/força exibida</label>
+              <input id="fireLabel" type="text" maxlength="20" placeholder="Ex: 2.1K">
+            </div>
+          </div>
+
+          <label class="checkRow">
+            <input id="artistActive" type="checkbox" checked>
+            Ativo no app
+          </label>
+
+          <div class="row">
+            <button id="saveArtistButton" type="button">Salvar artista</button>
+          </div>
+          <p id="artistStatus" class="muted">Valores sugeridos: Recentes R$ 30, Lançamentos R$ 50, Destaques R$ 100.</p>
+        </section>
+
+        <section id="artistListPanel" class="panel" hidden>
+          <div class="sectionTitle">
+            <h2>Artistas cadastrados</h2>
+            <button id="refreshArtistsButton" type="button">Atualizar</button>
+          </div>
+          <p id="artistListStatus" class="muted"></p>
+          <div id="artistList" class="artistList"></div>
+        </section>
+      </div>
     </main>
 
     <script type="module" src="/admin.js"></script>
