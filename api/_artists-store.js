@@ -1,6 +1,7 @@
 const { get, put } = require('@vercel/blob');
 
 const ARTISTS_MANIFEST_PATH = 'metadata/artists.json';
+const ARTISTS_IMAGES_PREFIX = 'artists/';
 
 const CATEGORY_PRICES = {
   featured: 100,
@@ -36,6 +37,7 @@ function normalizeArtist(artist) {
     projectName: String(artist.projectName || '').trim(),
     description: String(artist.description || '').trim(),
     imageUrl: normalizeUrl(artist.imageUrl),
+    imagePathname: String(artist.imagePathname || '').trim(),
     spotifyUrl: normalizeUrl(artist.spotifyUrl),
     youtubeUrl: normalizeUrl(artist.youtubeUrl),
     playsLabel: String(artist.playsLabel || '').trim(),
@@ -132,6 +134,7 @@ async function removeArtist(id) {
 }
 
 module.exports = {
+  ARTISTS_IMAGES_PREFIX,
   CATEGORY_PRICES,
   getArtists,
   removeArtist,

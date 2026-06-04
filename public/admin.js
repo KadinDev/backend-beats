@@ -26,7 +26,10 @@ const projectNameInput = document.querySelector('#projectName');
 const artistCategoryInput = document.querySelector('#artistCategory');
 const paidValueInput = document.querySelector('#paidValue');
 const artistDescriptionInput = document.querySelector('#artistDescription');
+const artistImageFileInput = document.querySelector('#artistImageFile');
 const imageUrlInput = document.querySelector('#imageUrl');
+const imagePathnameInput = document.querySelector('#imagePathname');
+const imageStatus = document.querySelector('#imageStatus');
 const spotifyUrlInput = document.querySelector('#spotifyUrl');
 const youtubeUrlInput = document.querySelector('#youtubeUrl');
 const playsLabelInput = document.querySelector('#playsLabel');
@@ -82,6 +85,11 @@ function safeFileName(name) {
     .replace(/[^a-zA-Z0-9._-]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .toLowerCase();
+}
+
+function safeImageName(artistName, fileName) {
+  const extension = fileName.split('.').pop() || 'jpg';
+  return `${safeFileName(artistName || 'artista')}-${Date.now()}.${safeFileName(extension)}`;
 }
 
 function authHeaders(extra = {}) {
@@ -249,7 +257,10 @@ function resetArtistForm() {
   artistCategoryInput.value = 'recent';
   paidValueInput.value = categoryPrices.recent;
   artistDescriptionInput.value = '';
+  artistImageFileInput.value = '';
   imageUrlInput.value = '';
+  imagePathnameInput.value = '';
+  imageStatus.textContent = 'Envie JPG, PNG ou WebP de ate 5 MB. Ao editar, escolha uma nova imagem somente se quiser trocar a capa.';
   spotifyUrlInput.value = '';
   youtubeUrlInput.value = '';
   playsLabelInput.value = '';
@@ -267,6 +278,7 @@ function readArtistForm() {
     paidValue: Number(paidValueInput.value || categoryPrices[artistCategoryInput.value]),
     description: artistDescriptionInput.value.trim(),
     imageUrl: imageUrlInput.value.trim(),
+    imagePathname: imagePathnameInput.value.trim(),
     spotifyUrl: spotifyUrlInput.value.trim(),
     youtubeUrl: youtubeUrlInput.value.trim(),
     playsLabel: playsLabelInput.value.trim(),
@@ -283,7 +295,10 @@ function fillArtistForm(artist) {
   artistCategoryInput.value = artist.category || 'recent';
   paidValueInput.value = artist.paidValue || categoryPrices[artistCategoryInput.value];
   artistDescriptionInput.value = artist.description || '';
+  artistImageFileInput.value = '';
   imageUrlInput.value = artist.imageUrl || '';
+  imagePathnameInput.value = artist.imagePathname || '';
+  imageStatus.textContent = artist.imageUrl ? 'Capa atual mantida. Escolha uma nova imagem somente se quiser trocar.' : 'Nenhuma capa enviada ainda.';
   spotifyUrlInput.value = artist.spotifyUrl || '';
   youtubeUrlInput.value = artist.youtubeUrl || '';
   playsLabelInput.value = artist.playsLabel || '';
@@ -291,6 +306,38 @@ function fillArtistForm(artist) {
   artistActiveInput.checked = artist.active !== false;
   artistStatus.textContent = `Editando ${artist.artistName}.`;
   artistFormPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function uploadArtistImageIfNeeded(artist) {
+  const file = artistImageFileInput.files?.[0];
+
+  if (!file) {
+    return artist;
+  }
+
+  imageStatus.textContent = 'Enviando capa...';
+
+  const blob = await upload(`artists/${safeImageName(artist.artistName, file.name)}`, file, {
+    access: 'public',
+    handleUploadUrl: '/api/upload',
+    clientPayload: JSON.stringify({ kind: 'artist-image' }),
+    contentType: file.type || 'image/jpeg',
+    multipart: true,
+    headers: {
+      'x-admin-password': getPassword()
+    },
+    onUploadProgress(event) {
+      imageStatus.textContent = `Enviando capa... ${event.percentage}%`;
+    }
+  });
+
+  imageStatus.textContent = 'Capa enviada.';
+
+  return {
+    ...artist,
+    imageUrl: blob.url,
+    imagePathname: blob.pathname
+  };
 }
 
 async function loadArtists() {
@@ -376,11 +423,13 @@ async function saveArtist() {
     return;
   }
 
-  const artist = readArtistForm();
+  let artist = readArtistForm();
   saveArtistButton.disabled = true;
   artistStatus.textContent = 'Salvando artista...';
 
   try {
+    artist = await uploadArtistImageIfNeeded(artist);
+
     const response = await fetch('/api/upsert-artist', {
       method: 'POST',
       headers: authHeaders({
@@ -417,7 +466,11 @@ async function deleteArtist(artist) {
     headers: authHeaders({
       'content-type': 'application/json'
     }),
-    body: JSON.stringify({ id: artist.id })
+    body: JSON.stringify({
+      id: artist.id,
+      imageUrl: artist.imageUrl,
+      imagePathname: artist.imagePathname
+    })
   });
   const data = await response.json();
 

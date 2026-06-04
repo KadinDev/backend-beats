@@ -2,8 +2,10 @@ const { handleUpload } = require('@vercel/blob/client');
 const { isAuthorized } = require('./_auth');
 const { readJson } = require('./_body');
 const { upsertTrack, UPLOADS_PREFIX } = require('./_tracks-store');
+const { ARTISTS_IMAGES_PREFIX } = require('./_artists-store');
 
 const MAX_AUDIO_SIZE = 25 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 function parsePayload(clientPayload) {
   try {
@@ -32,6 +34,26 @@ module.exports = async function handler(request, response) {
         }
 
         const payload = parsePayload(clientPayload);
+        const kind = String(payload.kind || 'track');
+
+        if (kind === 'artist-image') {
+          if (!pathname.startsWith(ARTISTS_IMAGES_PREFIX)) {
+            throw new Error('Caminho de imagem invalido.');
+          }
+
+          return {
+            allowedContentTypes: [
+              'image/jpeg',
+              'image/png',
+              'image/webp'
+            ],
+            maximumSizeInBytes: MAX_IMAGE_SIZE,
+            addRandomSuffix: true,
+            cacheControlMaxAge: 31536000,
+            tokenPayload: JSON.stringify({ kind })
+          };
+        }
+
         const title = String(payload.title || '').trim();
 
         if (!title) {
@@ -59,6 +81,10 @@ module.exports = async function handler(request, response) {
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         const payload = parsePayload(tokenPayload);
+
+        if (payload.kind === 'artist-image') {
+          return;
+        }
 
         await upsertTrack({
           id: blob.pathname,

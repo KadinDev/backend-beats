@@ -93,8 +93,13 @@
           <label for="artistDescription">Descrição curta</label>
           <input id="artistDescription" type="text" maxlength="180" placeholder="Ex: Uma nova fase, um novo som.">
 
-          <label for="imageUrl">URL da imagem/capa</label>
-          <input id="imageUrl" type="url" placeholder="https://...">
+          <label for="artistImageFile">Imagem/capa do artista</label>
+          <div class="row">
+            <input id="artistImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+          </div>
+          <input id="imageUrl" type="hidden">
+          <input id="imagePathname" type="hidden">
+          <p id="imageStatus" class="muted">Envie JPG, PNG ou WebP de ate 5 MB. Ao editar, escolha uma nova imagem somente se quiser trocar a capa.</p>
 
           <div class="formGrid">
             <div>
