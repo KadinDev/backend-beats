@@ -57,7 +57,7 @@ async function createPixPayment({ request, order }) {
       description: 'Mitos da Rima VIP vitalicio',
       payment_method_id: 'pix',
       external_reference: order.id,
-      notification_url: `${baseUrl}/api/vip-webhook`,
+      notification_url: `${baseUrl}/api/vip?action=webhook`,
       payer: {
         email: order.buyerEmail || `vip-${order.id.toLowerCase()}@mitosdarima.app`,
         first_name: order.buyerName || 'Mitos da Rima'

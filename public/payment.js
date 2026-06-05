@@ -23,7 +23,7 @@ async function copyText(text, fallbackMessage) {
 }
 
 async function checkOrder(orderId) {
-  const response = await fetch(`/api/vip-order?id=${encodeURIComponent(orderId)}`);
+  const response = await fetch(`/api/vip?action=order&id=${encodeURIComponent(orderId)}`);
   const data = await response.json();
 
   if (!response.ok) {
@@ -57,7 +57,7 @@ async function createPayment() {
   setStatus('Gerando Pix...');
 
   try {
-    const response = await fetch('/api/vip-create-payment', {
+    const response = await fetch('/api/vip?action=create-payment', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'

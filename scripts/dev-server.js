@@ -80,26 +80,26 @@ function handleApi(request, response) {
     return true;
   }
 
-  if (url.pathname === '/api/admin-vip' && request.method === 'GET') {
+  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'admin-orders' && request.method === 'GET') {
     sendJson(response, 200, { orders: [] });
     return true;
   }
 
-  if (url.pathname === '/api/vip-create-payment' && request.method === 'POST') {
+  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'create-payment' && request.method === 'POST') {
     sendJson(response, 501, {
       error: 'Pix local nao esta ativo. Use o deploy da Vercel com MERCADO_PAGO_ACCESS_TOKEN.'
     });
     return true;
   }
 
-  if (url.pathname === '/api/vip-order' && request.method === 'GET') {
+  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'order' && request.method === 'GET') {
     sendJson(response, 404, {
       error: 'Pedido local nao encontrado.'
     });
     return true;
   }
 
-  if (url.pathname === '/api/vip-validate-code' && request.method === 'POST') {
+  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'validate-code' && request.method === 'POST') {
     sendJson(response, 501, {
       isVip: false,
       error: 'Validacao local nao esta ativa. Use o deploy da Vercel.'

@@ -496,7 +496,7 @@ async function loadVipOrders() {
   vipListStatus.textContent = 'Carregando pedidos VIP...';
   vipList.innerHTML = '';
 
-  const response = await fetch('/api/admin-vip', {
+  const response = await fetch('/api/vip?action=admin-orders', {
     headers: authHeaders()
   });
   const data = await response.json();
@@ -555,7 +555,7 @@ async function loadVipOrders() {
 }
 
 async function updateVipOrder(order, patch) {
-  const response = await fetch('/api/admin-vip', {
+  const response = await fetch('/api/vip?action=admin-order', {
     method: 'PATCH',
     headers: authHeaders({
       'content-type': 'application/json'
