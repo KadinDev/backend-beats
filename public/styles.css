@@ -67,7 +67,8 @@ label:not(:first-child) {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   min-height: 42px;
   border: 1px solid #343846;
@@ -75,6 +76,12 @@ select {
   background: #111218;
   color: #fefefe;
   padding: 0 12px;
+}
+
+textarea {
+  min-height: 108px;
+  padding: 12px;
+  resize: vertical;
 }
 
 button,
@@ -91,6 +98,10 @@ button,
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.link.secondary {
+  background: #7e22ce;
 }
 
 button:disabled {
@@ -180,15 +191,84 @@ audio {
   width: 100%;
 }
 
+.heroPanel {
+  background:
+    linear-gradient(135deg, rgba(126, 34, 206, 0.24), rgba(0, 166, 81, 0.08)),
+    #1f212a;
+}
+
+.benefits {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+  padding-left: 20px;
+  color: #d7d9e2;
+}
+
+.paymentActions {
+  margin-top: 16px;
+}
+
+.pixBox {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #343846;
+  border-radius: 8px;
+  background: #16171e;
+}
+
+.pixBox img {
+  width: 220px;
+  height: 220px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.pixInfo {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.vipCodeBox {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #7e22ce;
+  border-radius: 8px;
+  background: rgba(126, 34, 206, 0.15);
+}
+
+.vipCodeBox code {
+  display: block;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 8px;
+  background: #111218;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  word-break: break-all;
+}
+
 @media (max-width: 760px) {
   .topbar,
   .row,
   .track,
   .artist,
-  .formGrid {
+  .formGrid,
+  .pixBox {
     align-items: stretch;
     flex-direction: column;
     grid-template-columns: 1fr;
+  }
+
+  .pixBox img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
   }
 
   .tabs {

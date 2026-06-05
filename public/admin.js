@@ -7,6 +7,7 @@ const loginStatus = document.querySelector('#loginStatus');
 const adminTabs = document.querySelector('#adminTabs');
 const beatsTab = document.querySelector('#beatsTab');
 const artistsTab = document.querySelector('#artistsTab');
+const vipTab = document.querySelector('#vipTab');
 const uploadPanel = document.querySelector('#uploadPanel');
 const listPanel = document.querySelector('#listPanel');
 const trackTitleInput = document.querySelector('#trackTitle');
@@ -41,6 +42,10 @@ const refreshArtistsButton = document.querySelector('#refreshArtistsButton');
 const artistStatus = document.querySelector('#artistStatus');
 const artistListStatus = document.querySelector('#artistListStatus');
 const artistList = document.querySelector('#artistList');
+const vipListPanel = document.querySelector('#vipListPanel');
+const refreshVipButton = document.querySelector('#refreshVipButton');
+const vipListStatus = document.querySelector('#vipListStatus');
+const vipList = document.querySelector('#vipList');
 
 const categoryLabels = {
   featured: 'Destaques',
@@ -106,6 +111,7 @@ function setActiveTab(tabName) {
 
   beatsTab.hidden = tabName !== 'beats';
   artistsTab.hidden = tabName !== 'artists';
+  vipTab.hidden = tabName !== 'vip';
 }
 
 async function loadTracks() {
@@ -482,6 +488,93 @@ async function deleteArtist(artist) {
   await loadArtists();
 }
 
+async function loadVipOrders() {
+  if (!isAdmin) {
+    return;
+  }
+
+  vipListStatus.textContent = 'Carregando pedidos VIP...';
+  vipList.innerHTML = '';
+
+  const response = await fetch('/api/admin-vip', {
+    headers: authHeaders()
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    vipListStatus.textContent = data.error || 'Nao foi possivel carregar os pedidos VIP.';
+    return;
+  }
+
+  const orders = data.orders || [];
+  vipListStatus.textContent = `${orders.length} pedidos encontrados.`;
+
+  for (const order of orders) {
+    const item = document.createElement('article');
+    item.className = 'track';
+
+    const info = document.createElement('div');
+    info.className = 'trackInfo';
+    info.innerHTML = `
+      <strong>${order.buyerName || order.buyerEmail || order.id}</strong>
+      <span>${formatCurrency(order.amount)} â€¢ ${order.status} â€¢ ${order.active ? 'Ativo' : 'Inativo'}</span>
+      <span>Pedido: ${order.id}${order.paymentId ? ` â€¢ Pagamento: ${order.paymentId}` : ''}</span>
+    `;
+
+    const code = document.createElement('div');
+    code.className = 'trackInfo';
+    code.innerHTML = order.vipCode
+      ? `<strong>Codigo VIP</strong><span>${order.vipCode}</span>`
+      : '<span>Codigo liberado somente apos aprovacao.</span>';
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+
+    if (order.vipCode) {
+      const copyButton = document.createElement('button');
+      copyButton.type = 'button';
+      copyButton.textContent = 'Copiar';
+      copyButton.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(order.vipCode);
+        vipListStatus.textContent = 'Codigo copiado.';
+      });
+      actions.append(copyButton);
+    }
+
+    const activeButton = document.createElement('button');
+    activeButton.type = 'button';
+    activeButton.textContent = order.active ? 'Desativar' : 'Ativar';
+    activeButton.addEventListener('click', () => updateVipOrder(order, {
+      active: !order.active
+    }));
+    actions.append(activeButton);
+
+    item.append(info, code, actions);
+    vipList.append(item);
+  }
+}
+
+async function updateVipOrder(order, patch) {
+  const response = await fetch('/api/admin-vip', {
+    method: 'PATCH',
+    headers: authHeaders({
+      'content-type': 'application/json'
+    }),
+    body: JSON.stringify({
+      id: order.id,
+      ...patch
+    })
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.error || 'Nao foi possivel atualizar o pedido VIP.');
+    return;
+  }
+
+  await loadVipOrders();
+}
+
 function setAdminState(nextState) {
   isAdmin = nextState;
   adminTabs.hidden = !nextState;
@@ -489,6 +582,7 @@ function setAdminState(nextState) {
   listPanel.hidden = !nextState;
   artistFormPanel.hidden = !nextState;
   artistListPanel.hidden = !nextState;
+  vipListPanel.hidden = !nextState;
   logoutButton.hidden = !nextState;
   loginButton.hidden = nextState;
   passwordInput.disabled = nextState;
@@ -496,8 +590,10 @@ function setAdminState(nextState) {
   if (!nextState) {
     trackList.innerHTML = '';
     artistList.innerHTML = '';
+    vipList.innerHTML = '';
     listStatus.textContent = '';
     artistListStatus.textContent = '';
+    vipListStatus.textContent = '';
   }
 }
 
@@ -525,7 +621,7 @@ async function login() {
   setAdminState(true);
   resetArtistForm();
   loginStatus.textContent = 'Admin logado.';
-  await Promise.all([loadTracks(), loadArtists()]);
+  await Promise.all([loadTracks(), loadArtists(), loadVipOrders()]);
 }
 
 function logout() {
@@ -556,6 +652,7 @@ refreshButton.addEventListener('click', loadTracks);
 saveArtistButton.addEventListener('click', saveArtist);
 clearArtistButton.addEventListener('click', resetArtistForm);
 refreshArtistsButton.addEventListener('click', loadArtists);
+refreshVipButton.addEventListener('click', loadVipOrders);
 
 if (getPassword()) {
   login();

@@ -29,6 +29,7 @@
       <nav id="adminTabs" class="tabs" hidden>
         <button class="tabButton active" type="button" data-tab="beats">Beats</button>
         <button class="tabButton" type="button" data-tab="artists">Palco Mitos</button>
+        <button class="tabButton" type="button" data-tab="vip">VIP</button>
       </nav>
 
       <div id="beatsTab" class="tabPanel">
@@ -141,6 +142,17 @@
           </div>
           <p id="artistListStatus" class="muted"></p>
           <div id="artistList" class="artistList"></div>
+        </section>
+      </div>
+
+      <div id="vipTab" class="tabPanel" hidden>
+        <section id="vipListPanel" class="panel" hidden>
+          <div class="sectionTitle">
+            <h2>Pedidos VIP</h2>
+            <button id="refreshVipButton" type="button">Atualizar</button>
+          </div>
+          <p id="vipListStatus" class="muted"></p>
+          <div id="vipList" class="trackList"></div>
         </section>
       </div>
     </main>
