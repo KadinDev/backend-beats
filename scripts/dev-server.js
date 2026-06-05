@@ -1,17 +1,17 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 
-const rootDir = path.resolve(__dirname, '..');
-const publicDir = path.join(rootDir, 'public');
+const rootDir = path.resolve(__dirname, "..");
+const publicDir = path.join(rootDir, "public");
 const port = Number(process.env.PORT || 3000);
 
 const contentTypes = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.mp3': 'audio/mpeg'
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".mp3": "audio/mpeg",
 };
 
 function send(response, statusCode, body, headers = {}) {
@@ -21,16 +21,18 @@ function send(response, statusCode, body, headers = {}) {
 
 function sendJson(response, statusCode, body) {
   send(response, statusCode, JSON.stringify(body), {
-    'content-type': contentTypes['.json']
+    "content-type": contentTypes[".json"],
   });
 }
 
 function getStaticFilePath(urlPath) {
-  if (urlPath === '/') {
-    return path.join(publicDir, 'index.html');
+  if (urlPath === "/") {
+    return path.join(publicDir, "index.html");
   }
 
-  const normalizedPath = path.normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, '');
+  const normalizedPath = path
+    .normalize(decodeURIComponent(urlPath))
+    .replace(/^(\.\.[/\\])+/, "");
   return path.join(publicDir, normalizedPath);
 }
 
@@ -38,21 +40,25 @@ function serveStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
   const filePath = getStaticFilePath(url.pathname);
 
-  if (!filePath.startsWith(publicDir) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    send(response, 404, 'Arquivo nao encontrado', {
-      'content-type': 'text/plain; charset=utf-8'
+  if (
+    !filePath.startsWith(publicDir) ||
+    !fs.existsSync(filePath) ||
+    fs.statSync(filePath).isDirectory()
+  ) {
+    send(response, 404, "Arquivo nao encontrado", {
+      "content-type": "text/plain; charset=utf-8",
     });
     return;
   }
 
   const extension = path.extname(filePath);
   const headers = {
-    'content-type': contentTypes[extension] || 'application/octet-stream'
+    "content-type": contentTypes[extension] || "application/octet-stream",
   };
 
-  if (extension === '.mp3') {
-    headers['cache-control'] = 'public, max-age=31536000, immutable';
-    headers['accept-ranges'] = 'bytes';
+  if (extension === ".mp3") {
+    headers["cache-control"] = "public, max-age=31536000, immutable";
+    headers["accept-ranges"] = "bytes";
   }
 
   response.writeHead(200, headers);
@@ -63,60 +69,80 @@ function handleTracks(response) {
   sendJson(response, 200, {
     tracks: [],
     blobEnabled: false,
-    warning: 'Servidor local nao acessa o Vercel Blob. Use o deploy para listar, enviar e deletar musicas reais.'
+    warning:
+      "Servidor local nao acessa o Vercel Blob. Use o deploy para listar, enviar e deletar musicas reais.",
   });
 }
 
 function handleApi(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
 
-  if (url.pathname === '/api/tracks' && request.method === 'GET') {
+  if (url.pathname === "/api/tracks" && request.method === "GET") {
     handleTracks(response);
     return true;
   }
 
-  if (url.pathname === '/api/admin-check' && request.method === 'POST') {
+  if (url.pathname === "/api/admin-check" && request.method === "POST") {
     sendJson(response, 200, { ok: true });
     return true;
   }
 
-  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'admin-orders' && request.method === 'GET') {
+  if (
+    url.pathname === "/api/vip" &&
+    url.searchParams.get("action") === "admin-orders" &&
+    request.method === "GET"
+  ) {
     sendJson(response, 200, { orders: [] });
     return true;
   }
 
-  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'create-payment' && request.method === 'POST') {
+  if (
+    url.pathname === "/api/vip" &&
+    url.searchParams.get("action") === "create-payment" &&
+    request.method === "POST"
+  ) {
     sendJson(response, 501, {
-      error: 'Pix local nao esta ativo. Use o deploy da Vercel com MERCADO_PAGO_ACCESS_TOKEN.'
+      error:
+        "Pix local nao esta ativo. Use o deploy da Vercel com MERCADO_PAGO_ACCESS_TOKEN.",
     });
     return true;
   }
 
-  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'order' && request.method === 'GET') {
+  if (
+    url.pathname === "/api/vip" &&
+    url.searchParams.get("action") === "order" &&
+    request.method === "GET"
+  ) {
     sendJson(response, 404, {
-      error: 'Pedido local nao encontrado.'
+      error: "Pedido local nao encontrado.",
     });
     return true;
   }
 
-  if (url.pathname === '/api/vip' && url.searchParams.get('action') === 'validate-code' && request.method === 'POST') {
+  if (
+    url.pathname === "/api/vip" &&
+    url.searchParams.get("action") === "validate-code" &&
+    request.method === "POST"
+  ) {
     sendJson(response, 501, {
       isVip: false,
-      error: 'Validacao local nao esta ativa. Use o deploy da Vercel.'
+      error: "Validacao local nao esta ativa. Use o deploy da Vercel.",
     });
     return true;
   }
 
-  if (url.pathname === '/api/upload' && request.method === 'POST') {
+  if (url.pathname === "/api/upload" && request.method === "POST") {
     sendJson(response, 501, {
-      error: 'Upload local nao esta ativo. Use o deploy da Vercel com BLOB_READ_WRITE_TOKEN.'
+      error:
+        "Upload local nao esta ativo. Use o deploy da Vercel com BLOB_READ_WRITE_TOKEN.",
     });
     return true;
   }
 
-  if (url.pathname === '/api/delete-track' && request.method === 'DELETE') {
+  if (url.pathname === "/api/delete-track" && request.method === "DELETE") {
     sendJson(response, 501, {
-      error: 'Delete local nao esta ativo. Use o deploy da Vercel com BLOB_READ_WRITE_TOKEN.'
+      error:
+        "Delete local nao esta ativo. Use o deploy da Vercel com BLOB_READ_WRITE_TOKEN.",
     });
     return true;
   }
@@ -125,7 +151,7 @@ function handleApi(request, response) {
 }
 
 const server = http.createServer((request, response) => {
-  if (request.url.startsWith('/api/') && handleApi(request, response)) {
+  if (request.url.startsWith("/api/") && handleApi(request, response)) {
     return;
   }
 

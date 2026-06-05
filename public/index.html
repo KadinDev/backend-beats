@@ -1,84 +1,213 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mitos da Rima</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body>
-    <main class="shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Mitos da Rima</p>
-          <h1>Mitos da Rima</h1>
-        </div>
-        <a class="link" href="/admin.html">Admin</a>
+  <body class="landingBody">
+    <main class="landingShell">
+      <header class="siteHeader">
+        <a class="brandLockup" href="#top" aria-label="Mitos da Rima">
+          <img class="brandLogo" src="/brand-header.png" alt="" />
+          <span>MITOS DA RIMA</span>
+        </a>
+
+        <nav class="siteNav" aria-label="Navegação principal">
+          <a href="#app">App</a>
+          <a href="#video">Tutorial</a>
+          <a href="#vip">VIP</a>
+          <a class="adminLink" href="/admin.html">Admin</a>
+        </nav>
       </header>
 
-      <section class="panel heroPanel">
-        <p class="eyebrow">APK Android</p>
-        <h2>Treine sua mente. Domine as rimas.</h2>
-        <p>Baixe o app, treine com beats e desbloqueie o Mitos VIP para liberar todos os recursos.</p>
-        <div class="row">
-          <a class="link" href="#" aria-disabled="true">Baixar APK em breve</a>
-          <a class="link secondary" href="#vip">Virar VIP</a>
+      <section id="top" class="landingHero">
+        <div class="heroCopy">
+          <p class="kicker">APK Android • Treino de rima</p>
+          <h1>Treine sua mente. Domine as rimas.</h1>
+          <p class="heroText">
+            Mitos da Rima é um app para praticar improviso, criatividade e ritmo
+            com treinos rápidos, beats e desafios feitos para quem vive a
+            cultura.
+          </p>
+
+          <div class="heroActions">
+            <a class="primaryCta" href="/mitos-da-rima.apk" download
+              >Download app</a
+            >
+          </div>
+        </div>
+
+        <div class="phoneMock" aria-label="Prévia visual do app Mitos da Rima">
+          <div class="phoneFrame appScreenshotFrame">
+            <img
+              src="/app-screen.png"
+              alt="Tela inicial do aplicativo Mitos da Rima"
+            />
+          </div>
         </div>
       </section>
 
-      <section id="vip" class="panel">
-        <div class="sectionTitle">
-          <div>
-            <p class="eyebrow">Mitos VIP</p>
-            <h2>Acesso vitalicio por R$ 15,90</h2>
-          </div>
+      <section id="app" class="featureSection">
+        <div class="sectionIntro">
+          <p class="kicker">O que tem no app</p>
+          <h2>Treinos rápidos para evoluir na rima</h2>
+          <p>
+            Abra o app, escolha um modo, coloque um beat e comece. O Mitos da
+            Rima ajuda você a treinar ideias, ritmo, respostas e criatividade
+            sem depender de internet para salvar seu perfil e evolução.
+          </p>
         </div>
 
-        <ul class="benefits">
-          <li>Libera todos os beats do app.</li>
-          <li>Libera o treino do dia.</li>
-          <li>Libera palavras combinadas.</li>
-          <li>Deixa o app pronto para seu selo VIP no perfil.</li>
-        </ul>
+        <div class="featureGrid">
+          <article class="featureCard">
+            <span class="featureIcon">MC</span>
+            <h3>Improviso guiado</h3>
+            <p>
+              Palavras, perguntas, temas e ataques para destravar novas ideias.
+            </p>
+          </article>
 
-        <div class="formGrid">
-          <div>
-            <label for="buyerName">Nome</label>
-            <input id="buyerName" type="text" maxlength="80" placeholder="Seu nome">
-          </div>
+          <article class="featureCard">
+            <span class="featureIcon">BEAT</span>
+            <h3>Beats para treino</h3>
+            <p>
+              Treine com beats selecionados e desbloqueie a biblioteca completa
+              no VIP.
+            </p>
+          </article>
 
-          <div>
-            <label for="buyerEmail">E-mail</label>
-            <input id="buyerEmail" type="email" maxlength="120" placeholder="voce@email.com">
-          </div>
+          <article class="featureCard">
+            <span class="featureIcon">XP</span>
+            <h3>Evolução local</h3>
+            <p>
+              Treinos, pontos, sequência e perfil ficam salvos no seu
+              dispositivo.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="video" class="videoSection">
+        <div class="sectionIntro">
+          <p class="kicker">Tutorial</p>
+          <h2>Como baixar, instalar e ativar o VIP</h2>
         </div>
 
-        <label for="buyerPhone">WhatsApp opcional</label>
-        <input id="buyerPhone" type="tel" maxlength="30" placeholder="(88) 99927-77500">
+        <div class="videoFrame">
+          <!-- Troque o src abaixo pela URL embed do YouTube. Exemplo: https://www.youtube.com/embed/ID_DO_VIDEO -->
+          <iframe
+            src="https://www.youtube.com/embed/cJGQkCLID7U?si=iIe3ccrOm-gEVF7s"
+            title="Tutorial Mitos da Rima"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+              web-share;
+            "
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
 
-        <div class="row paymentActions">
-          <button id="createPaymentButton" type="button">Gerar Pix</button>
-          <span id="paymentStatus" class="muted"></span>
+      <section id="vip" class="vipLandingPanel">
+        <div class="vipPitch">
+          <p class="kicker">Mitos VIP</p>
+          <h2>Acesso vitalício por R$ 15,90</h2>
+          <p>
+            O VIP libera tudo que já existe e acompanha tudo que vier depois:
+            novos beats, novos desafios, melhorias e recursos exclusivos dentro
+            do app.
+          </p>
+
+          <ul class="vipBenefits">
+            <li>Todos os beats liberados.</li>
+            <li>Treino do dia desbloqueado.</li>
+            <li>Palavras combinadas liberado.</li>
+            <li>Atualizações futuras do VIP incluídas.</li>
+          </ul>
         </div>
 
-        <div id="pixBox" class="pixBox" hidden>
-          <img id="pixQrImage" alt="QR Code Pix">
-          <div class="pixInfo">
-            <strong>Escaneie o QR Code ou copie o Pix.</strong>
-            <textarea id="pixCode" readonly></textarea>
-            <button id="copyPixButton" type="button">Copiar Pix</button>
+        <div class="paymentCard">
+          <img class="paymentArt" src="/brand-header.png" alt="Mitos da Rima" />
+
+          <div class="paymentHeader">
+            <div>
+              <h3>Gerar código VIP</h3>
+              <p>
+                Depois do Pix aprovado, espere alguns segundos, o código vai
+                aparecer aqui em instantes.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div id="vipCodeBox" class="vipCodeBox" hidden>
-          <p class="eyebrow">Pagamento aprovado</p>
-          <h2>Seu codigo VIP</h2>
-          <code id="vipCode"></code>
-          <button id="copyVipButton" type="button">Copiar codigo</button>
-          <p class="muted">Abra o app, toque em Ativar VIP e cole esse codigo.</p>
+          <div class="formGrid">
+            <div>
+              <label for="buyerName">Nome</label>
+              <input
+                id="buyerName"
+                type="text"
+                maxlength="80"
+                placeholder="Seu nome"
+              />
+            </div>
+
+            <div>
+              <label for="buyerEmail">E-mail</label>
+              <input
+                id="buyerEmail"
+                type="email"
+                maxlength="120"
+                placeholder="voce@email.com"
+              />
+            </div>
+          </div>
+
+          <label for="buyerPhone">WhatsApp opcional</label>
+          <input
+            id="buyerPhone"
+            type="tel"
+            maxlength="30"
+            placeholder="(88) 99927-77500"
+          />
+
+          <div class="row paymentActions">
+            <button
+              id="createPaymentButton"
+              class="primaryButton"
+              type="button"
+            >
+              Gerar Pix
+            </button>
+            <span id="paymentStatus" class="muted"></span>
+          </div>
+
+          <div id="pixBox" class="pixBox" hidden>
+            <img id="pixQrImage" alt="QR Code Pix" />
+            <div class="pixInfo">
+              <strong>Escaneie o QR Code ou copie o Pix.</strong>
+              <textarea id="pixCode" readonly></textarea>
+              <button id="copyPixButton" type="button">Copiar Pix</button>
+            </div>
+          </div>
+
+          <div id="vipCodeBox" class="vipCodeBox" hidden>
+            <p class="kicker">Pagamento aprovado</p>
+            <h2>Seu código VIP</h2>
+            <code id="vipCode"></code>
+            <button id="copyVipButton" type="button">Copiar código</button>
+            <p class="muted">
+              Abra o app, toque em Ativar VIP e cole esse código.
+            </p>
+          </div>
         </div>
       </section>
     </main>
+
     <script src="/payment.js"></script>
   </body>
 </html>

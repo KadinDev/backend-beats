@@ -191,6 +191,422 @@ audio {
   width: 100%;
 }
 
+.landingBody {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(126, 34, 206, 0.36), transparent 30%),
+    radial-gradient(circle at 80% 0%, rgba(255, 196, 18, 0.18), transparent 26%),
+    linear-gradient(180deg, #05060a 0%, #101119 54%, #05060a 100%);
+}
+
+.landingShell {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 22px 0 56px;
+}
+
+.siteHeader {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.brandLockup,
+.siteNav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandLockup {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.brandLogo {
+  width: 58px;
+  height: 38px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 26px rgba(126, 34, 206, 0.34);
+}
+
+.siteNav a {
+  color: #d6d7dd;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.siteNav .adminLink {
+  padding: 10px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.landingHero {
+  min-height: 680px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  align-items: center;
+  gap: 54px;
+  padding: 42px 0 36px;
+}
+
+.heroCopy h1 {
+  max-width: 680px;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(44px, 7vw, 88px);
+  line-height: 0.92;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.kicker {
+  margin: 0 0 12px;
+  color: #a855f7;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heroText,
+.sectionIntro p,
+.vipPitch p,
+.paymentHeader p {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 17px;
+  line-height: 1.58;
+}
+
+.heroText {
+  max-width: 620px;
+  margin: 22px 0 0;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primaryCta,
+.ghostCta,
+.primaryButton {
+  min-height: 48px;
+  border-radius: 8px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.primaryCta,
+.primaryButton {
+  background: linear-gradient(135deg, #8b2be8, #5b1695);
+  box-shadow: 0 14px 34px rgba(126, 34, 206, 0.32);
+}
+
+.ghostCta {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.phoneMock {
+  display: flex;
+  justify-content: center;
+}
+
+.phoneFrame {
+  position: relative;
+  width: 330px;
+  min-height: 610px;
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  border-radius: 34px;
+  background: #080911;
+  padding: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.03),
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(126, 34, 206, 0.38);
+}
+
+.phoneFrame::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: 92px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.phoneFrame img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 24px;
+  display: block;
+}
+
+.appScreenshotFrame {
+  width: 300px;
+  min-height: auto;
+  padding: 10px;
+  border-radius: 28px;
+}
+
+.appScreenshotFrame img {
+  height: auto;
+  aspect-ratio: 377 / 827;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 22px;
+}
+
+.phoneContent {
+  padding: 22px 12px 8px;
+}
+
+.phoneBadge {
+  width: fit-content;
+  display: block;
+  border-radius: 999px;
+  background: rgba(255, 196, 18, 0.14);
+  color: #ffc412;
+  padding: 8px 11px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.phoneContent h2 {
+  margin-top: 16px;
+  color: #ffffff;
+  font-size: 30px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.phoneContent p {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.phoneCardList {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.phoneCardList span {
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 14px;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.featureSection,
+.vipLandingPanel {
+  margin-top: 26px;
+}
+
+.sectionIntro {
+  max-width: 720px;
+}
+
+.sectionIntro h2,
+.vipPitch h2 {
+  color: #ffffff;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.featureCard,
+.paymentCard,
+.vipPitch {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(8px);
+}
+
+.featureCard {
+  min-height: 190px;
+  padding: 20px;
+}
+
+.featureIcon {
+  min-width: 52px;
+  min-height: 34px;
+  border-radius: 999px;
+  background: rgba(168, 85, 247, 0.16);
+  color: #ffc412;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.featureCard h3 {
+  margin: 18px 0 8px;
+  color: #ffffff;
+  font-size: 21px;
+}
+
+.featureCard p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.5;
+}
+
+.vipLandingPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.videoSection {
+  margin-top: 34px;
+}
+
+.videoFrame {
+  position: relative;
+  margin-top: 22px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(168, 85, 247, 0.38);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(126, 34, 206, 0.28), rgba(0, 0, 0, 0.1)),
+    #101119;
+  overflow: hidden;
+}
+
+.videoFrame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.videoFrame iframe[src=""] {
+  display: none;
+}
+
+.videoPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.videoPlaceholder strong {
+  font-size: clamp(28px, 5vw, 54px);
+  text-transform: uppercase;
+}
+
+.videoPlaceholder span {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.vipPitch,
+.paymentCard {
+  padding: 24px;
+}
+
+.vipPitch {
+  background:
+    linear-gradient(135deg, rgba(126, 34, 206, 0.24), rgba(255, 196, 18, 0.08)),
+    rgba(255, 255, 255, 0.055);
+}
+
+.vipBenefits {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vipBenefits li {
+  border-left: 3px solid #ffc412;
+  padding: 10px 0 10px 12px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.paymentHeader {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.paymentArt {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.priceTag {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: #ffc412;
+  color: #05060a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.paymentHeader h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+}
+
+.paymentHeader p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
 .heroPanel {
   background:
     linear-gradient(135deg, rgba(126, 34, 206, 0.24), rgba(0, 166, 81, 0.08)),
@@ -254,6 +670,47 @@ audio {
 }
 
 @media (max-width: 760px) {
+  .landingShell {
+    width: min(100% - 24px, 560px);
+    padding-top: 14px;
+  }
+
+  .siteHeader,
+  .siteNav,
+  .heroActions {
+    align-items: stretch;
+  }
+
+  .siteHeader {
+    flex-direction: column;
+  }
+
+  .siteNav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .landingHero,
+  .featureGrid,
+  .vipLandingPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .landingHero {
+    min-height: auto;
+    gap: 28px;
+    padding-top: 30px;
+  }
+
+  .phoneFrame {
+    width: min(100%, 330px);
+    min-height: 560px;
+  }
+
+  .paymentHeader {
+    grid-template-columns: 1fr;
+  }
+
   .topbar,
   .row,
   .track,
