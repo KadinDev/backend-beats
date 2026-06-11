@@ -7,6 +7,7 @@ const loginStatus = document.querySelector('#loginStatus');
 const adminTabs = document.querySelector('#adminTabs');
 const beatsTab = document.querySelector('#beatsTab');
 const artistsTab = document.querySelector('#artistsTab');
+const newsTab = document.querySelector('#newsTab');
 const vipTab = document.querySelector('#vipTab');
 const uploadPanel = document.querySelector('#uploadPanel');
 const listPanel = document.querySelector('#listPanel');
@@ -42,6 +43,24 @@ const refreshArtistsButton = document.querySelector('#refreshArtistsButton');
 const artistStatus = document.querySelector('#artistStatus');
 const artistListStatus = document.querySelector('#artistListStatus');
 const artistList = document.querySelector('#artistList');
+const newsFormPanel = document.querySelector('#newsFormPanel');
+const newsListPanel = document.querySelector('#newsListPanel');
+const newsFormTitle = document.querySelector('#newsFormTitle');
+const newsIdInput = document.querySelector('#newsId');
+const newsTitleInput = document.querySelector('#newsTitle');
+const newsContentInput = document.querySelector('#newsContent');
+const newsPublishedAtInput = document.querySelector('#newsPublishedAt');
+const newsImageFileInput = document.querySelector('#newsImageFile');
+const newsImageUrlInput = document.querySelector('#newsImageUrl');
+const newsImagePathnameInput = document.querySelector('#newsImagePathname');
+const newsImageStatus = document.querySelector('#newsImageStatus');
+const newsActiveInput = document.querySelector('#newsActive');
+const saveNewsButton = document.querySelector('#saveNewsButton');
+const clearNewsButton = document.querySelector('#clearNewsButton');
+const refreshNewsButton = document.querySelector('#refreshNewsButton');
+const newsStatus = document.querySelector('#newsStatus');
+const newsListStatus = document.querySelector('#newsListStatus');
+const newsList = document.querySelector('#newsList');
 const vipListPanel = document.querySelector('#vipListPanel');
 const refreshVipButton = document.querySelector('#refreshVipButton');
 const vipListStatus = document.querySelector('#vipListStatus');
@@ -62,6 +81,7 @@ const categoryPrices = {
 passwordInput.value = localStorage.getItem('adminPassword') || '';
 let isAdmin = false;
 let artistsCache = [];
+let newsCache = [];
 
 function getPassword() {
   return passwordInput.value.trim();
@@ -81,6 +101,23 @@ function formatCurrency(value = 0) {
     style: 'currency',
     currency: 'BRL'
   });
+}
+
+function formatDateTime(value) {
+  if (!value) {
+    return '';
+  }
+
+  return new Date(value).toLocaleString('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
+}
+
+function toDateTimeLocal(value = new Date().toISOString()) {
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset() * 60 * 1000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
 }
 
 function safeFileName(name) {
@@ -111,6 +148,7 @@ function setActiveTab(tabName) {
 
   beatsTab.hidden = tabName !== 'beats';
   artistsTab.hidden = tabName !== 'artists';
+  newsTab.hidden = tabName !== 'news';
   vipTab.hidden = tabName !== 'vip';
 }
 
@@ -488,6 +526,229 @@ async function deleteArtist(artist) {
   await loadArtists();
 }
 
+function resetNewsForm() {
+  newsFormTitle.textContent = 'Cadastrar notícia';
+  newsIdInput.value = '';
+  newsTitleInput.value = '';
+  newsContentInput.value = '';
+  newsPublishedAtInput.value = toDateTimeLocal();
+  newsImageFileInput.value = '';
+  newsImageUrlInput.value = '';
+  newsImagePathnameInput.value = '';
+  newsImageStatus.textContent = 'Envie JPG, PNG ou WebP de até 5 MB.';
+  newsActiveInput.checked = true;
+  newsStatus.textContent = 'O aplicativo receberá somente as 30 notícias ativas mais recentes.';
+}
+
+function readNewsForm() {
+  return {
+    id: newsIdInput.value || undefined,
+    title: newsTitleInput.value.trim(),
+    content: newsContentInput.value.trim(),
+    publishedAt: newsPublishedAtInput.value
+      ? new Date(newsPublishedAtInput.value).toISOString()
+      : new Date().toISOString(),
+    imageUrl: newsImageUrlInput.value.trim(),
+    imagePathname: newsImagePathnameInput.value.trim(),
+    active: newsActiveInput.checked
+  };
+}
+
+function fillNewsForm(item) {
+  newsFormTitle.textContent = 'Editar notícia';
+  newsIdInput.value = item.id;
+  newsTitleInput.value = item.title || '';
+  newsContentInput.value = item.content || '';
+  newsPublishedAtInput.value = toDateTimeLocal(item.publishedAt);
+  newsImageFileInput.value = '';
+  newsImageUrlInput.value = item.imageUrl || '';
+  newsImagePathnameInput.value = item.imagePathname || '';
+  newsImageStatus.textContent = item.imageUrl
+    ? 'Imagem atual mantida. Escolha uma nova somente se quiser trocar.'
+    : 'Nenhuma imagem enviada ainda.';
+  newsActiveInput.checked = item.active !== false;
+  newsStatus.textContent = `Editando: ${item.title}.`;
+  newsFormPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function uploadNewsImageIfNeeded(item) {
+  const file = newsImageFileInput.files?.[0];
+
+  if (!file) {
+    return item;
+  }
+
+  newsImageStatus.textContent = 'Enviando imagem...';
+
+  const blob = await upload(`news/${safeImageName(item.title, file.name)}`, file, {
+    access: 'public',
+    handleUploadUrl: '/api/upload',
+    clientPayload: JSON.stringify({ kind: 'news-image' }),
+    contentType: file.type || 'image/jpeg',
+    multipart: true,
+    headers: {
+      'x-admin-password': getPassword()
+    },
+    onUploadProgress(event) {
+      newsImageStatus.textContent = `Enviando imagem... ${event.percentage}%`;
+    }
+  });
+
+  newsImageStatus.textContent = 'Imagem enviada.';
+
+  return {
+    ...item,
+    imageUrl: blob.url,
+    imagePathname: blob.pathname
+  };
+}
+
+async function loadNews() {
+  if (!isAdmin) {
+    return;
+  }
+
+  newsListStatus.textContent = 'Carregando notícias...';
+  newsList.innerHTML = '';
+
+  const response = await fetch('/api/news?action=admin', {
+    headers: authHeaders()
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    newsListStatus.textContent = data.error || 'Não foi possível carregar as notícias.';
+    return;
+  }
+
+  newsCache = data.news || [];
+  newsListStatus.textContent = `${newsCache.length} notícias cadastradas.`;
+
+  for (const item of newsCache) {
+    const article = document.createElement('article');
+    article.className = 'newsAdminItem';
+
+    const image = document.createElement('img');
+    image.src = item.imageUrl;
+    image.alt = item.title;
+    image.loading = 'lazy';
+
+    const info = document.createElement('div');
+    info.className = 'trackInfo';
+
+    const title = document.createElement('strong');
+    title.textContent = item.title;
+
+    const metadata = document.createElement('span');
+    metadata.textContent = `${formatDateTime(item.publishedAt)} • ${item.active ? 'Ativa' : 'Inativa'}`;
+
+    const summary = document.createElement('span');
+    summary.textContent = item.content.length > 180
+      ? `${item.content.slice(0, 180)}...`
+      : item.content;
+
+    info.append(title, metadata, summary);
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+
+    const openLink = document.createElement('a');
+    openLink.href = item.imageUrl;
+    openLink.target = '_blank';
+    openLink.rel = 'noreferrer';
+    openLink.textContent = 'Imagem';
+    actions.append(openLink);
+
+    const editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.textContent = 'Editar';
+    editButton.addEventListener('click', () => fillNewsForm(item));
+    actions.append(editButton);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.textContent = 'Deletar';
+    deleteButton.addEventListener('click', () => deleteNews(item));
+    actions.append(deleteButton);
+
+    article.append(image, info, actions);
+    newsList.append(article);
+  }
+}
+
+async function saveNews() {
+  if (!isAdmin) {
+    alert('Entre como admin.');
+    return;
+  }
+
+  if (!getPassword()) {
+    alert('Informe a senha admin.');
+    return;
+  }
+
+  let item = readNewsForm();
+
+  if (!item.title || !item.content || (!item.imageUrl && !newsImageFileInput.files?.[0])) {
+    newsStatus.textContent = 'Preencha título, conteúdo e imagem.';
+    return;
+  }
+
+  saveNewsButton.disabled = true;
+  newsStatus.textContent = 'Salvando notícia...';
+
+  try {
+    item = await uploadNewsImageIfNeeded(item);
+
+    const response = await fetch('/api/news?action=save', {
+      method: 'POST',
+      headers: authHeaders({
+        'content-type': 'application/json'
+      }),
+      body: JSON.stringify(item)
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      newsStatus.textContent = data.error || 'Não foi possível salvar a notícia.';
+      return;
+    }
+
+    resetNewsForm();
+    newsStatus.textContent = 'Notícia salva.';
+    await loadNews();
+  } catch (error) {
+    newsStatus.textContent = error.message || 'Falha ao salvar a notícia.';
+  } finally {
+    saveNewsButton.disabled = false;
+  }
+}
+
+async function deleteNews(item) {
+  const confirmed = confirm(`Deletar a notícia "${item.title}"?`);
+
+  if (!confirmed) {
+    return;
+  }
+
+  const response = await fetch('/api/news?action=delete', {
+    method: 'DELETE',
+    headers: authHeaders({
+      'content-type': 'application/json'
+    }),
+    body: JSON.stringify({ id: item.id })
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.error || 'Não foi possível deletar a notícia.');
+    return;
+  }
+
+  resetNewsForm();
+  await loadNews();
+}
+
 async function loadVipOrders() {
   if (!isAdmin) {
     return;
@@ -582,6 +843,8 @@ function setAdminState(nextState) {
   listPanel.hidden = !nextState;
   artistFormPanel.hidden = !nextState;
   artistListPanel.hidden = !nextState;
+  newsFormPanel.hidden = !nextState;
+  newsListPanel.hidden = !nextState;
   vipListPanel.hidden = !nextState;
   logoutButton.hidden = !nextState;
   loginButton.hidden = nextState;
@@ -590,9 +853,11 @@ function setAdminState(nextState) {
   if (!nextState) {
     trackList.innerHTML = '';
     artistList.innerHTML = '';
+    newsList.innerHTML = '';
     vipList.innerHTML = '';
     listStatus.textContent = '';
     artistListStatus.textContent = '';
+    newsListStatus.textContent = '';
     vipListStatus.textContent = '';
   }
 }
@@ -620,8 +885,9 @@ async function login() {
   localStorage.setItem('adminPassword', getPassword());
   setAdminState(true);
   resetArtistForm();
+  resetNewsForm();
   loginStatus.textContent = 'Admin logado.';
-  await Promise.all([loadTracks(), loadArtists(), loadVipOrders()]);
+  await Promise.all([loadTracks(), loadArtists(), loadNews(), loadVipOrders()]);
 }
 
 function logout() {
@@ -652,6 +918,9 @@ refreshButton.addEventListener('click', loadTracks);
 saveArtistButton.addEventListener('click', saveArtist);
 clearArtistButton.addEventListener('click', resetArtistForm);
 refreshArtistsButton.addEventListener('click', loadArtists);
+saveNewsButton.addEventListener('click', saveNews);
+clearNewsButton.addEventListener('click', resetNewsForm);
+refreshNewsButton.addEventListener('click', loadNews);
 refreshVipButton.addEventListener('click', loadVipOrders);
 
 if (getPassword()) {
@@ -660,4 +929,5 @@ if (getPassword()) {
   setAdminState(false);
   setActiveTab('beats');
   resetArtistForm();
+  resetNewsForm();
 }

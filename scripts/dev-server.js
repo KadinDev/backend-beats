@@ -74,11 +74,36 @@ function handleTracks(response) {
   });
 }
 
+function handleNews(response) {
+  sendJson(response, 200, {
+    news: [],
+    count: 0,
+    warning:
+      "Servidor local nao acessa o Vercel Blob. Use o deploy para gerenciar noticias reais.",
+  });
+}
+
 function handleApi(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
 
   if (url.pathname === "/api/tracks" && request.method === "GET") {
     handleTracks(response);
+    return true;
+  }
+
+  if (url.pathname === "/api/news" && request.method === "GET") {
+    handleNews(response);
+    return true;
+  }
+
+  if (
+    url.pathname === "/api/news" &&
+    (request.method === "POST" || request.method === "DELETE")
+  ) {
+    sendJson(response, 501, {
+      error:
+        "Noticias locais usam apenas simulacao. Use o deploy da Vercel com BLOB_READ_WRITE_TOKEN.",
+    });
     return true;
   }
 

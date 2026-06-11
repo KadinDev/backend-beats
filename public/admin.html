@@ -29,6 +29,7 @@
       <nav id="adminTabs" class="tabs" hidden>
         <button class="tabButton active" type="button" data-tab="beats">Beats</button>
         <button class="tabButton" type="button" data-tab="artists">Palco Mitos</button>
+        <button class="tabButton" type="button" data-tab="news">Notícias</button>
         <button class="tabButton" type="button" data-tab="vip">VIP</button>
       </nav>
 
@@ -142,6 +143,53 @@
           </div>
           <p id="artistListStatus" class="muted"></p>
           <div id="artistList" class="artistList"></div>
+        </section>
+      </div>
+
+      <div id="newsTab" class="tabPanel" hidden>
+        <section id="newsFormPanel" class="panel" hidden>
+          <div class="sectionTitle">
+            <h2 id="newsFormTitle">Cadastrar notícia</h2>
+            <button id="clearNewsButton" type="button">Nova</button>
+          </div>
+
+          <input id="newsId" type="hidden">
+
+          <label for="newsTitle">Título</label>
+          <input id="newsTitle" type="text" maxlength="180" placeholder="Ex: MC conquista título nacional">
+
+          <label for="newsContent">Conteúdo da notícia</label>
+          <textarea id="newsContent" maxlength="12000" placeholder="Escreva a notícia completa..."></textarea>
+
+          <label for="newsPublishedAt">Data de publicação</label>
+          <input id="newsPublishedAt" type="datetime-local">
+
+          <label for="newsImageFile">Imagem da notícia</label>
+          <div class="row">
+            <input id="newsImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+          </div>
+          <input id="newsImageUrl" type="hidden">
+          <input id="newsImagePathname" type="hidden">
+          <p id="newsImageStatus" class="muted">Envie JPG, PNG ou WebP de até 5 MB.</p>
+
+          <label class="checkRow">
+            <input id="newsActive" type="checkbox" checked>
+            Ativa no aplicativo
+          </label>
+
+          <div class="row">
+            <button id="saveNewsButton" type="button">Salvar notícia</button>
+          </div>
+          <p id="newsStatus" class="muted">O aplicativo receberá somente as 30 notícias ativas mais recentes.</p>
+        </section>
+
+        <section id="newsListPanel" class="panel" hidden>
+          <div class="sectionTitle">
+            <h2>Notícias cadastradas</h2>
+            <button id="refreshNewsButton" type="button">Atualizar</button>
+          </div>
+          <p id="newsListStatus" class="muted"></p>
+          <div id="newsList" class="newsList"></div>
         </section>
       </div>
 

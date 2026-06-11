@@ -3,6 +3,7 @@ const { isAuthorized } = require('./_auth');
 const { readJson } = require('./_body');
 const { upsertTrack, UPLOADS_PREFIX } = require('./_tracks-store');
 const { ARTISTS_IMAGES_PREFIX } = require('./_artists-store');
+const { NEWS_IMAGES_PREFIX } = require('./_news-store');
 
 const MAX_AUDIO_SIZE = 25 * 1024 * 1024;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -36,8 +37,12 @@ module.exports = async function handler(request, response) {
         const payload = parsePayload(clientPayload);
         const kind = String(payload.kind || 'track');
 
-        if (kind === 'artist-image') {
-          if (!pathname.startsWith(ARTISTS_IMAGES_PREFIX)) {
+        if (kind === 'artist-image' || kind === 'news-image') {
+          const expectedPrefix = kind === 'news-image'
+            ? NEWS_IMAGES_PREFIX
+            : ARTISTS_IMAGES_PREFIX;
+
+          if (!pathname.startsWith(expectedPrefix)) {
             throw new Error('Caminho de imagem invalido.');
           }
 
@@ -82,7 +87,7 @@ module.exports = async function handler(request, response) {
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         const payload = parsePayload(tokenPayload);
 
-        if (payload.kind === 'artist-image') {
+        if (payload.kind === 'artist-image' || payload.kind === 'news-image') {
           return;
         }
 
